@@ -2,14 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.gogitek.clientapp.view.congdung;
+package com.gogitek.clientapp.view.thuoc;
 
-import com.gogitek.demotcp.model.LoaiMon;
+
+
+import com.gogitek.demotcp.dao.MonAnDAO;
 import com.gogitek.demotcp.model.MonAn;
-import com.gogitek.demotcp.dao.LoaiMonDAO;
 import com.gogitek.demotcp.view.Home;
+//import com.gogitek.clientapp.view.thuoc.JEditThuoc;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.JFrame;
@@ -17,37 +18,40 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author hoang
+ * @author bmtnt
  */
-public class JLoaiMon extends javax.swing.JFrame {
+public class JThuoc extends javax.swing.JFrame {
 
-    private LoaiMonDAO loaiMonDAO = new LoaiMonDAO();
-    
+    private MonAnDAO MonDAO = new MonAnDAO();
+    private List<MonAn> list;
+
     /**
      * Creates new form MonAn
      */
-    public JLoaiMon() {
-        initComponents();      
-        tableLoaiMon.setEnabled(false);
+    public JThuoc() {
+        initComponents(); 
+        tableMonAn.setEnabled(false);
         initData();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-    
+
     public void initData() {
-        List<LoaiMon> list = null;
         try {
-            list = loaiMonDAO.getAll();
+            list = MonDAO.getAll();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        DefaultTableModel model = (DefaultTableModel) tableLoaiMon.getModel();
-        for (LoaiMon value : list) {
-            Object[] rowData = new Object[4];
+        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
+        for (MonAn value : list) {
+            Object[] rowData = new Object[7];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_loai();
-            rowData[2] = value.getTen_loai();
-            rowData[3] = value.getMo_ta();            
+            rowData[1] = value.getMa_mon();
+            rowData[2] = value.getTen_mon();
+            rowData[3] = value.getHinh_anh();
+            rowData[4] = value.getGia();
+            rowData[5] = value.getThoi_gian();
+            rowData[6] = value.getLoai_mon_id();
             model.addRow(rowData);
         }
     }
@@ -62,12 +66,13 @@ public class JLoaiMon extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableLoaiMon = new javax.swing.JTable();
+        tableMonAn = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnThem = new javax.swing.JButton();
         inputName = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
+        typeSearch = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -76,27 +81,31 @@ public class JLoaiMon extends javax.swing.JFrame {
             }
         });
 
-        tableLoaiMon.setModel(new javax.swing.table.DefaultTableModel(
+        tableMonAn.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Mã loại", "Tên loại", "Mô tả"
+                "ID", "Mã Thuốc", "Tên Thuốc", "Dạng Thuốc", "Giá Thuốc", "Công Dụng"
             }
         ));
-        tableLoaiMon.addContainerListener(new java.awt.event.ContainerAdapter() {
+        tableMonAn.setEnabled(false);
+        tableMonAn.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentAdded(java.awt.event.ContainerEvent evt) {
-                tableLoaiMonComponentAdded(evt);
+                tableMonAnComponentAdded(evt);
             }
         });
-        tableLoaiMon.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableMonAn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableLoaiMonMouseClicked(evt);
+                tableMonAnMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tableMonAnMousePressed(evt);
             }
         });
-        jScrollPane1.setViewportView(tableLoaiMon);
+        jScrollPane1.setViewportView(tableMonAn);
 
-        jLabel1.setText("QUẢN LÝ LOẠI MÓN ĂN");
+        jLabel1.setText("QUẢN LÝ MÓN ĂN");
 
         btnThem.setText("Thêm");
         btnThem.addActionListener(new java.awt.event.ActionListener() {
@@ -125,6 +134,12 @@ public class JLoaiMon extends javax.swing.JFrame {
             }
         });
 
+        typeSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                typeSearchActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -140,14 +155,16 @@ public class JLoaiMon extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnRefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(265, 265, 265)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(282, 282, 282)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +176,8 @@ public class JLoaiMon extends javax.swing.JFrame {
                     .addComponent(btnThem)
                     .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearch)
-                    .addComponent(btnRefresh))
+                    .addComponent(btnRefresh)
+                    .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -172,71 +190,121 @@ public class JLoaiMon extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_inputNameActionPerformed
 
-    private void tableLoaiMonComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tableLoaiMonComponentAdded
+    private void tableMonAnComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tableMonAnComponentAdded
         // TODO add your handling code here:        
-    }//GEN-LAST:event_tableLoaiMonComponentAdded
+    }//GEN-LAST:event_tableMonAnComponentAdded
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
-        new JThemLoaiMon().setVisible(true);
+        new JThemThuoc().setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_btnThemActionPerformed
 
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+    private void tableMonAnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMonAnMouseClicked
         // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
+        Vector<Object> v = (Vector<Object>) model.getDataVector().elementAt(tableMonAn.convertRowIndexToModel(tableMonAn.rowAtPoint(evt.getPoint())));
+        MonAn mon1 = new MonAn((Long) v.get(0), (String) v.get(1), (String) v.get(2), (String) v.get(3),
+                (Integer) v.get(4), (Integer) v.get(5), (Long) v.get(6));
+        (new JEditThuoc(mon1)).setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_tableMonAnMouseClicked
+
+    private void tableMonAnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMonAnMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tableMonAnMousePressed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:        
         inputName.setText("");
-        DefaultTableModel model = (DefaultTableModel) tableLoaiMon.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
         model.setRowCount(0);
-        List<LoaiMon> list1 = new ArrayList<>();
+        List<MonAn> list1 = null;
         try {
-            list1 = loaiMonDAO.getAll();
+            list1 = MonDAO.getAll();
         } catch (Exception ex) {
             ex.printStackTrace();
-        }   
-        for (LoaiMon value : list1) {
-            Object[] rowData = new Object[4];
+        }
+        for (MonAn value : list1) {
+            Object[] rowData = new Object[7];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_loai();
-            rowData[2] = value.getTen_loai();
-            rowData[3] = value.getMo_ta();            
+            rowData[1] = value.getMa_mon();
+            rowData[2] = value.getTen_mon();
+            rowData[3] = value.getHinh_anh();
+            rowData[4] = value.getGia();
+            rowData[5] = value.getThoi_gian();
+            rowData[6] = value.getLoai_mon_id();
             model.addRow(rowData);
         }
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableLoaiMon.getModel();
+
+        // TODO add your handling code here:            
+        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
         model.setRowCount(0);
-        List<LoaiMon> list1 = null;
-        try {
-            String name = inputName.getText();
-            list1 = loaiMonDAO.searchByName(name);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }   
-        for (LoaiMon value : list1) {
-            Object[] rowData = new Object[4];
+        List<MonAn> list1 = null;
+
+        int index = typeSearch.getSelectedIndex();
+        switch (index) {
+            case 0:
+                try {
+                    int gia = Integer.parseInt(inputName.getText());
+                    list1 = MonDAO.searchMonAnByGia(gia);
+                } catch (Exception e) {
+                    try {
+                        list1 = MonDAO.getAll();
+                    } catch (Exception  ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                break;
+            case 1:
+                try {
+                    int tg = Integer.parseInt(inputName.getText());
+                    list1 = MonDAO.searchMonAnByThoiGian(tg);
+                } catch (Exception e) {
+                    try {
+                        list1 = MonDAO.getAll();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                break;
+            case 2:
+                try {
+                    Long id_loai_mon = Long.valueOf(inputName.getText());
+                    list1 = MonDAO.searchMonAnByLoaiMon(id_loai_mon);
+                } catch (Exception e) {
+                    try {
+                        list1 = MonDAO.getAll();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                break;
+        }
+        for (MonAn value : list1) {
+            Object[] rowData = new Object[7];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_loai();
-            rowData[2] = value.getTen_loai();
-            rowData[3] = value.getMo_ta();            
+            rowData[1] = value.getMa_mon();
+            rowData[2] = value.getTen_mon();
+            rowData[3] = value.getHinh_anh();
+            rowData[4] = value.getGia();
+            rowData[5] = value.getThoi_gian();
+            rowData[6] = value.getLoai_mon_id();
             model.addRow(rowData);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
-
-    private void tableLoaiMonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableLoaiMonMouseClicked
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableLoaiMon.getModel();
-        Vector<Object> v = (Vector<Object>) model.getDataVector().elementAt(tableLoaiMon.convertRowIndexToModel(tableLoaiMon.rowAtPoint(evt.getPoint())));
-        LoaiMon loaiMon1 = new LoaiMon((Long)v.get(0), (String)v.get(1), (String)v.get(2), (String)v.get(3));
-        (new JSuaTTLoaiMon(loaiMon1)).setVisible(true);
-        setVisible(false);
-    }//GEN-LAST:event_tableLoaiMonMouseClicked
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
         new Home().setVisible(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void typeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_typeSearchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -267,9 +335,8 @@ public class JLoaiMon extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
-                new JLoaiMon().setVisible(true);
+                new JThuoc().setVisible(true);
             }
         });
     }
@@ -281,6 +348,7 @@ public class JLoaiMon extends javax.swing.JFrame {
     private javax.swing.JTextField inputName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableLoaiMon;
+    private javax.swing.JTable tableMonAn;
+    private javax.swing.JComboBox<String> typeSearch;
     // End of variables declaration//GEN-END:variables
 }

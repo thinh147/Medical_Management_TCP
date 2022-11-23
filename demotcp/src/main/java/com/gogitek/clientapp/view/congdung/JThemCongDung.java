@@ -4,24 +4,24 @@
  */
 package com.gogitek.clientapp.view.congdung;
 
-import com.gogitek.demotcp.model.LoaiMon;
-import com.gogitek.demotcp.model.dto.Action;
-import com.gogitek.demotcp.model.dto.ModelType;
-import com.gogitek.demotcp.model.dto.ObjectAction;
-import com.gogitek.clientapp.controller.ClientController;
+import com.gogitek.clientapp.controller.SocketConnection;
+import com.gogitek.clientapp.model.dto.ServerResponse;
+import com.gogitek.clientapp.service.CongDungService;
+import com.gogitek.clientapp.service.CongDungServiceImpl;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
  *
- * @author hoang
+ * @author bmtnt
  */
-public class JThemLoaiMon extends javax.swing.JFrame {
-
+public class JThemCongDung extends javax.swing.JFrame {
+    private final CongDungService congDungService = new CongDungServiceImpl();
     /**
      * Creates new form JThemMonAn
      */
-    public JThemLoaiMon() {
+    public JThemCongDung() {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -53,11 +53,11 @@ public class JThemLoaiMon extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("THÊM LOẠI MÓN ĂN");
+        jLabel1.setText("Thêm Công Dụng");
 
-        jLabel2.setText("Mã loại:");
+        jLabel2.setText("Mã công dụng:");
 
-        jLabel3.setText("Tên loại:");
+        jLabel3.setText("Tên công dụng:");
 
         jLabel4.setText("Mô tả:");
 
@@ -107,7 +107,7 @@ public class JThemLoaiMon extends javax.swing.JFrame {
                         .addComponent(btnAdd)
                         .addGap(60, 60, 60)
                         .addComponent(btnCancel)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,30 +147,21 @@ public class JThemLoaiMon extends javax.swing.JFrame {
         String moTa = inputMoTa.getText();
         if (maLoai.length() <= 15 && maLoai.matches("\\w+")) {
             if (tenLoai.length() <= 50) {
-                LoaiMon loaiMon = new LoaiMon(maLoai, tenLoai, moTa);
-                ClientController ctr = new ClientController();
-                Action  status = Action.ADD;
-                ObjectAction sendObject = new ObjectAction();
-                sendObject.setType(ModelType.LOAI_MON);
-                sendObject.setAction(status);
-                sendObject.setObject(loaiMon);
-                ctr.openSocket();
-                ctr.sendObject(sendObject);
-
-                String res = ctr.getResult();
+                SocketConnection socketConnection = congDungService.updateCongDung(null, maLoai, tenLoai, moTa);
+                Object res = socketConnection.getResult();
 
                 try {
-                    if (res.equals("ok")) {
+                    if (ServerResponse.OK.equals(res)) {
                         JOptionPane.showMessageDialog(this, "Thêm thành công!");
                     } else {
                         JOptionPane.showMessageDialog(this, "thêm thất bại");
                     }
                     setVisible(false);
-                    new JLoaiMon().setVisible(true);
+                    new JCongDung().setVisible(true);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                ctr.closeConnection();
+                socketConnection.closeConnection();
             } else {
                 JOptionPane.showMessageDialog(this, "Tên loại món ăn không đúng kích thước hoặc chứa ký tự đặc biệt");
                 inputTenLoai.requestFocus();
@@ -186,12 +177,12 @@ public class JThemLoaiMon extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
         setVisible(false);
-        new JLoaiMon().setVisible(true);
+        new JCongDung().setVisible(true);
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
-        new JLoaiMon().setVisible(true);
+        new JCongDung().setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
     /**
@@ -211,14 +202,22 @@ public class JThemLoaiMon extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JThemLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JThemCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JThemLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JThemCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JThemLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JThemCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JThemLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JThemCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -231,7 +230,7 @@ public class JThemLoaiMon extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JThemLoaiMon().setVisible(true);
+                new JThemCongDung().setVisible(true);
             }
         });
     }

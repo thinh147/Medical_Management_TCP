@@ -2,14 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.gogitek.clientapp.view.thuoc;
+package com.gogitek.clientapp.view.congdung;
 
+import com.gogitek.clientapp.model.CongDung;
+import com.gogitek.clientapp.service.CongDungService;
+import com.gogitek.clientapp.service.CongDungServiceImpl;
 
-
-import com.gogitek.demotcp.dao.MonAnDAO;
-import com.gogitek.demotcp.model.MonAn;
-import com.gogitek.demotcp.view.Home;
-//import com.gogitek.clientapp.view.thuoc.JSuaMonAn;
+import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Vector;
@@ -18,40 +17,37 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author hoang
+ * @author bmtnt
  */
-public class JMonAn extends javax.swing.JFrame {
+public class JCongDung extends javax.swing.JFrame {
 
-    private MonAnDAO MonDAO = new MonAnDAO();
-    private List<MonAn> list;
-
+    private final CongDungService congDungService = new CongDungServiceImpl();
+    
     /**
      * Creates new form MonAn
      */
-    public JMonAn() {
-        initComponents(); 
-        tableMonAn.setEnabled(false);
+    public JCongDung() {
+        initComponents();      
+        tableCongDung.setEnabled(false);
         initData();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-
+    
     public void initData() {
+        List<CongDung> list = new ArrayList<>();
         try {
-            list = MonDAO.getAll();
+            list = congDungService.findListCongDungByKey(null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
-        for (MonAn value : list) {
-            Object[] rowData = new Object[7];
+        DefaultTableModel model = (DefaultTableModel) tableCongDung.getModel();
+        for (CongDung value : list) {
+            Object[] rowData = new Object[4];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_mon();
-            rowData[2] = value.getTen_mon();
-            rowData[3] = value.getHinh_anh();
-            rowData[4] = value.getGia();
-            rowData[5] = value.getThoi_gian();
-            rowData[6] = value.getLoai_mon_id();
+            rowData[1] = value.getMaCongDung();
+            rowData[2] = value.getTen();
+            rowData[3] = value.getMota();
             model.addRow(rowData);
         }
     }
@@ -66,13 +62,12 @@ public class JMonAn extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableMonAn = new javax.swing.JTable();
+        tableCongDung = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnThem = new javax.swing.JButton();
         inputName = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
-        typeSearch = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -81,31 +76,27 @@ public class JMonAn extends javax.swing.JFrame {
             }
         });
 
-        tableMonAn.setModel(new javax.swing.table.DefaultTableModel(
+        tableCongDung.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Mã món", "Tên món", "Hình ảnh", "Giá đặt", "Thời gian phục vụ", "ID Loại món"
+                "ID", "Mã Công Dụng", "Tên Công Dụng", "Mô tả"
             }
         ));
-        tableMonAn.setEnabled(false);
-        tableMonAn.addContainerListener(new java.awt.event.ContainerAdapter() {
+        tableCongDung.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentAdded(java.awt.event.ContainerEvent evt) {
-                tableMonAnComponentAdded(evt);
+                tableCongDungComponentAdded(evt);
             }
         });
-        tableMonAn.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableCongDung.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMonAnMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                tableMonAnMousePressed(evt);
+                tableCongDungMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tableMonAn);
+        jScrollPane1.setViewportView(tableCongDung);
 
-        jLabel1.setText("QUẢN LÝ MÓN ĂN");
+        jLabel1.setText("QUẢN LÝ CÔNG DỤNG");
 
         btnThem.setText("Thêm");
         btnThem.addActionListener(new java.awt.event.ActionListener() {
@@ -134,8 +125,6 @@ public class JMonAn extends javax.swing.JFrame {
             }
         });
 
-        typeSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Giá đặt", "Thời gian phục vụ", "Loại món ăn" }));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -151,16 +140,14 @@ public class JMonAn extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnRefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSearch)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(282, 282, 282)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(265, 265, 265)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,8 +159,7 @@ public class JMonAn extends javax.swing.JFrame {
                     .addComponent(btnThem)
                     .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearch)
-                    .addComponent(btnRefresh)
-                    .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRefresh))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -186,112 +172,66 @@ public class JMonAn extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_inputNameActionPerformed
 
-    private void tableMonAnComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tableMonAnComponentAdded
+    private void tableCongDungComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tableCongDungComponentAdded
         // TODO add your handling code here:        
-    }//GEN-LAST:event_tableMonAnComponentAdded
+    }//GEN-LAST:event_tableCongDungComponentAdded
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
-        new JThemMonAn().setVisible(true);
+        new JThemCongDung().setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_btnThemActionPerformed
 
-    private void tableMonAnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMonAnMouseClicked
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
-        Vector<Object> v = (Vector<Object>) model.getDataVector().elementAt(tableMonAn.convertRowIndexToModel(tableMonAn.rowAtPoint(evt.getPoint())));
-        MonAn mon1 = new MonAn((Long) v.get(0), (String) v.get(1), (String) v.get(2), (String) v.get(3),
-                (Integer) v.get(4), (Integer) v.get(5), (Long) v.get(6));
-        (new JSuaMonAn(mon1)).setVisible(true);
-        setVisible(false);
-    }//GEN-LAST:event_tableMonAnMouseClicked
-
-    private void tableMonAnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMonAnMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tableMonAnMousePressed
-
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // TODO add your handling code here:        
+        // TODO add your handling code here:
         inputName.setText("");
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableCongDung.getModel();
         model.setRowCount(0);
-        List<MonAn> list1 = null;
+        List<CongDung> list1 = new ArrayList<>();
         try {
-            list1 = MonDAO.getAll();
+            list1 = congDungService.findListCongDungByKey(null);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        for (MonAn value : list1) {
-            Object[] rowData = new Object[7];
+        }   
+        for (CongDung value : list1) {
+            Object[] rowData = new Object[4];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_mon();
-            rowData[2] = value.getTen_mon();
-            rowData[3] = value.getHinh_anh();
-            rowData[4] = value.getGia();
-            rowData[5] = value.getThoi_gian();
-            rowData[6] = value.getLoai_mon_id();
+            rowData[1] = value.getMaCongDung();
+            rowData[2] = value.getTen();
+            rowData[3] = value.getMota();
             model.addRow(rowData);
         }
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-
-        // TODO add your handling code here:            
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) tableCongDung.getModel();
         model.setRowCount(0);
-        List<MonAn> list1 = null;
-
-        int index = typeSearch.getSelectedIndex();
-        switch (index) {
-            case 0:
-                try {
-                    int gia = Integer.parseInt(inputName.getText());
-                    list1 = MonDAO.searchMonAnByGia(gia);
-                } catch (Exception e) {
-                    try {
-                        list1 = MonDAO.getAll();
-                    } catch (Exception  ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-            case 1:
-                try {
-                    int tg = Integer.parseInt(inputName.getText());
-                    list1 = MonDAO.searchMonAnByThoiGian(tg);
-                } catch (Exception e) {
-                    try {
-                        list1 = MonDAO.getAll();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-            case 2:
-                try {
-                    Long id_loai_mon = Long.valueOf(inputName.getText());
-                    list1 = MonDAO.searchMonAnByLoaiMon(id_loai_mon);
-                } catch (Exception e) {
-                    try {
-                        list1 = MonDAO.getAll();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-        }
-        for (MonAn value : list1) {
-            Object[] rowData = new Object[7];
+        List<CongDung> listCongDung = new ArrayList<>();
+        try {
+            String name = inputName.getText();
+            listCongDung = congDungService.findListCongDungByKey(name);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }   
+        for (CongDung value : listCongDung) {
+            Object[] rowData = new Object[4];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_mon();
-            rowData[2] = value.getTen_mon();
-            rowData[3] = value.getHinh_anh();
-            rowData[4] = value.getGia();
-            rowData[5] = value.getThoi_gian();
-            rowData[6] = value.getLoai_mon_id();
+            rowData[1] = value.getMaCongDung();
+            rowData[2] = value.getTen();
+            rowData[3] = value.getMota();
             model.addRow(rowData);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void tableCongDungMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCongDungMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) tableCongDung.getModel();
+        Vector<Object> v = (Vector<Object>) model.getDataVector().elementAt(tableCongDung.convertRowIndexToModel(tableCongDung.rowAtPoint(evt.getPoint())));
+        CongDung loaiMon1 = new CongDung((Long)v.get(0), (String)v.get(1), (String)v.get(2), (String)v.get(3));
+        (new JEditCongDung(loaiMon1)).setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_tableCongDungMouseClicked
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
@@ -315,20 +255,21 @@ public class JMonAn extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new JMonAn().setVisible(true);
+                new JCongDung().setVisible(true);
             }
         });
     }
@@ -340,7 +281,6 @@ public class JMonAn extends javax.swing.JFrame {
     private javax.swing.JTextField inputName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableMonAn;
-    private javax.swing.JComboBox<String> typeSearch;
+    private javax.swing.JTable tableCongDung;
     // End of variables declaration//GEN-END:variables
 }

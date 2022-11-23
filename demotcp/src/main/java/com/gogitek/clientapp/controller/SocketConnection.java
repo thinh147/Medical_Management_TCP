@@ -11,18 +11,16 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Hiep
+ * @author bmtnt
  */
-public class ClientController {
-
-    private int port;
-    private String host;
+public class SocketConnection {
+    private final int port;
+    private final String host;
     private Socket mySocket;
-    private ArrayList<Socket> list;
-
-    public ClientController() {
+    
+    public SocketConnection() {
         host = "localhost";
-        port = 8000;
+        port = 1908;
     }
 
     public void openSocket() {
@@ -44,11 +42,11 @@ public class ClientController {
 
     
 
-    public String getResult() {
-        String res = "";
+    public Object getResult() {
+        Object res = new Object();
         try {
             ObjectInputStream ois = new ObjectInputStream(mySocket.getInputStream());
-            res = (String) ois.readObject();
+            res =  ois.readObject();
         } catch (Exception e) {
             e.printStackTrace();
         }

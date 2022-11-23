@@ -3,15 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.gogitek.clientapp.view.congdung;
-
-import com.gogitek.demotcp.dao.LoaiMonDAO;
-import com.gogitek.demotcp.dao.MonAnDAO;
-import com.gogitek.demotcp.model.LoaiMon;
-import com.gogitek.demotcp.model.MonAn;
-import com.gogitek.demotcp.model.dto.Action;
-import com.gogitek.demotcp.model.dto.ModelType;
-import com.gogitek.demotcp.model.dto.ObjectAction;
-import com.gogitek.clientapp.controller.ClientController;
+import com.gogitek.clientapp.controller.SocketConnection;
+import com.gogitek.clientapp.model.CongDung;
+import com.gogitek.clientapp.model.dto.Action;
+import com.gogitek.clientapp.service.CongDungService;
+import com.gogitek.clientapp.service.CongDungServiceImpl;
 
 import java.util.List;
 import javax.swing.JFrame;
@@ -19,34 +15,32 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author hoang
+ * @author bmtnt
  */
-public class JSuaTTLoaiMon extends javax.swing.JFrame {
+public class JEditCongDung extends javax.swing.JFrame {
 
-    private List<MonAn> list;
-    private ClientController ctr = new ClientController();
+    private final CongDungService congDungService = new CongDungServiceImpl();
 
-    public JSuaTTLoaiMon() {
+    public JEditCongDung() {
     }
 
     /**
-     * Creates new form JThemMonAn
+     * Creates new form JEditCongDung
      *
-     * @param loaiMon
+     * @param congDung
      */
-    public JSuaTTLoaiMon(LoaiMon loaiMon) {
-
+    public JEditCongDung(CongDung congDung) {
         initComponents();
-        init(loaiMon);
+        init(congDung);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
-    public void init(LoaiMon loaiMon) {
-        inputID.setText(loaiMon.getId() + "");
-        inputMaLoai.setText(loaiMon.getMa_loai());
-        inputTenLoai.setText(loaiMon.getTen_loai());
-        inputMota.setText(loaiMon.getMo_ta());
+    public void init(CongDung congDung) {
+        inputID.setText(congDung.getId() + "");
+        inputMaLoai.setText(congDung.getMaCongDung());
+        inputTenLoai.setText(congDung.getTen());
+        inputMota.setText(congDung.getMota());
     }
 
     /**
@@ -198,46 +192,35 @@ public class JSuaTTLoaiMon extends javax.swing.JFrame {
         String moTa = inputMota.getText();
         if (maLoai.length() <= 15 && maLoai.matches("\\w+")) {
             if (tenLoai.length() <= 50 && tenLoai.matches("\\w+")) {
-                LoaiMon loaiMon = new LoaiMon(id, maLoai, tenLoai, moTa);
-                ClientController ctr = new ClientController();
-                Action  status = Action.UPDATE;
-                ObjectAction sendObject = new ObjectAction();
-                sendObject.setAction(status);
-                sendObject.setType(ModelType.LOAI_MON);
-                sendObject.setObject(loaiMon);
-                ctr.openSocket();
-                ctr.sendObject(sendObject);
+                SocketConnection socketConnection = congDungService.updateCongDung(id, maLoai, tenLoai, moTa);
                 try {
-                    JOptionPane.showMessageDialog(this, "Sửa thông tin loại món ăn thành công!");
+                    JOptionPane.showMessageDialog(this, "Sửa thông tin công dụng thành công!");
                     setVisible(false);
-                    new JLoaiMon().setVisible(true);
+                    new JCongDung().setVisible(true);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                ctr.closeConnection();
+                socketConnection.closeConnection();
             } else {
-                JOptionPane.showMessageDialog(this, "Tên loại món ăn không đúng kích thước hoặc chứa ký tự đặc biệt");
+                JOptionPane.showMessageDialog(this, "Tên loại công dụng không đúng kích thước hoặc chứa ký tự đặc biệt");
                 inputTenLoai.requestFocus();
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Mã loại món ăn không đúng kích thước hoặc chứa ký tự đặc biệt");
+            JOptionPane.showMessageDialog(this, "Mã loại công dụng không đúng kích thước hoặc chứa ký tự đặc biệt");
             inputMaLoai.requestFocus();
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
-        MonAnDAO monAnDAO = new MonAnDAO();
-        LoaiMonDAO loaiMonDAO = new LoaiMonDAO();
         Long id = Long.valueOf(inputID.getText());
-        int i = JOptionPane.showConfirmDialog(this, "Bạn chắc chắn muốn xóa id " + id + " không?", "DELETE MON AN", JOptionPane.YES_NO_OPTION);
+        int i = JOptionPane.showConfirmDialog(this, "Bạn chắc chắn muốn xóa id " + id + " không?", "DELETE công dụng", JOptionPane.YES_NO_OPTION);
         if (i == JOptionPane.YES_OPTION) {
             try {
-                monAnDAO.setNullIdLoaiMon(id);
-                loaiMonDAO.delete(id);
+                congDungService.deleteCongDungById(id);
                 JOptionPane.showMessageDialog(this, "Xóa thành công!");
                 setVisible(false);
-                new JLoaiMon().setVisible(true);
+                new JCongDung().setVisible(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -247,12 +230,12 @@ public class JSuaTTLoaiMon extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
         setVisible(false);
-        new JLoaiMon().setVisible(true);
+        new JCongDung().setVisible(true);
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
-        new JLoaiMon().setVisible(true);
+        new JCongDung().setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
     /**
@@ -272,14 +255,30 @@ public class JSuaTTLoaiMon extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JSuaTTLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JEditCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JSuaTTLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JEditCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JSuaTTLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JEditCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JSuaTTLoaiMon.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JEditCongDung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -300,7 +299,7 @@ public class JSuaTTLoaiMon extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JSuaTTLoaiMon().setVisible(true);
+                new JEditCongDung().setVisible(true);
             }
         });
     }
