@@ -118,7 +118,7 @@ public class CongDungDao extends DaoConnection {
         return false;
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         String sql = "delete from cong_dung where id = ?";
         Connection connection = null;
         PreparedStatement ps = null;
@@ -129,6 +129,7 @@ public class CongDungDao extends DaoConnection {
             ps.setLong(1, id);
             ps.executeUpdate();
             connection.commit();
+            return true;
         } catch (Exception e) {
             if (connection != null) {
                 try {
@@ -149,5 +150,6 @@ public class CongDungDao extends DaoConnection {
                 e2.printStackTrace();
             }
         }
+        return false;
     }
 }

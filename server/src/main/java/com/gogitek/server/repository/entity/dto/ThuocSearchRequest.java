@@ -1,6 +1,8 @@
 package com.gogitek.server.repository.entity.dto;
 
-public class ThuocSearchRequest {
+import java.io.Serializable;
+
+public class ThuocSearchRequest implements Serializable {
     private String keyword;
     private Long congDungId;
 

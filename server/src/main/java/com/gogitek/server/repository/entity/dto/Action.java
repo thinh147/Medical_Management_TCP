@@ -5,10 +5,12 @@
  */
 package com.gogitek.server.repository.entity.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author bmtnt
  */
-public enum Action {
+public enum Action implements Serializable {
     MODIFY, SELECT, DELETE;
 }

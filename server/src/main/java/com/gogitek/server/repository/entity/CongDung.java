@@ -5,11 +5,13 @@
  */
 package com.gogitek.server.repository.entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author bmtnt
  */
-public class CongDung {
+public class CongDung implements Serializable {
     private Long id;
     private String maCongDung;
     private String mota;

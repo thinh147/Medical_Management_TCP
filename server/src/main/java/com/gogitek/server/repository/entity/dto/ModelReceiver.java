@@ -5,10 +5,11 @@
  */
 package com.gogitek.server.repository.entity.dto;
 
+import java.io.Serializable;
+
 /**
- *
  * @author bmtnt
  */
-public enum ModelReceiver {
+public enum ModelReceiver implements Serializable {
     THUOC, CONG_DUNG;
 }

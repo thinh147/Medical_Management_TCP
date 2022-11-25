@@ -5,11 +5,13 @@
  */
 package com.gogitek.server.repository.entity.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author bmtnt
  */
-public class ObjectReceiver {
+public class ObjectReceiver implements Serializable {
     private Object object;
     private Action action;
     private ModelReceiver modelReceiver;
