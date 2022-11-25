@@ -4,48 +4,47 @@
  */
 package com.gogitek.clientapp.view.thuoc;
 
-
-import com.gogitek.demotcp.dao.LoaiMonDAO;
-import com.gogitek.demotcp.model.LoaiMon;
-import com.gogitek.demotcp.model.MonAn;
-import com.gogitek.demotcp.model.dto.Action;
-import com.gogitek.demotcp.model.dto.ModelType;
-import com.gogitek.demotcp.model.dto.ObjectAction;
 import com.gogitek.clientapp.controller.SocketConnection;
+import com.gogitek.clientapp.model.CongDung;
+import com.gogitek.clientapp.model.dto.ServerResponse;
+import com.gogitek.clientapp.service.CongDungService;
+import com.gogitek.clientapp.service.CongDungServiceImpl;
+import com.gogitek.clientapp.service.ThuocService;
+import com.gogitek.clientapp.service.ThuocServiceImpl;
 
-import java.io.File;
-import java.util.List;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author bmtnt
  */
 public class JThemThuoc extends javax.swing.JFrame {
-    //    private LoaiMonCtr monAnCtr = new LoaiMonCtr();
-    private LoaiMonDAO loaiMonDAO = new LoaiMonDAO();
+    private final CongDungService congDungService;
+    private final ThuocService thuocService;
 
     /**
-     * Creates new form JThemMonAn
+     * Creates new form JThemThuoc
      */
     public JThemThuoc() {
         initComponents();
         init();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        congDungService = new CongDungServiceImpl();
+        thuocService = new ThuocServiceImpl();
     }
 
     public void init() {
-        List<LoaiMon> list = null;
+        List<CongDung> list = new ArrayList<>();
         try {
-            list = loaiMonDAO.getAll();
+            list = (List<CongDung>) congDungService.findListCongDungByKey(null).getResult();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        for (LoaiMon loaiMon : list) {
+        for (CongDung loaiMon : list) {
             congDungName.addItem(loaiMon.getId() + "");
         }
     }
@@ -115,71 +114,71 @@ public class JThemThuoc extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addComponent(btnAdd)
-                        .addGap(68, 68, 68)
-                        .addComponent(btnBack)))
-                .addContainerGap(94, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(inputDangThuoc)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(46, 46, 46))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(84, 84, 84)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(inputMaThuoc)
-                    .addComponent(inputTenThuoc)
-                    .addComponent(inputGiaThuoc)
-                    .addComponent(congDungName, 0, 189, Short.MAX_VALUE)
-                    .addComponent(dangThuoc, 0, 189, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(142, 142, 142)
+                                                .addComponent(jLabel1))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(88, 88, 88)
+                                                .addComponent(btnAdd)
+                                                .addGap(68, 68, 68)
+                                                .addComponent(btnBack)))
+                                .addContainerGap(94, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                                .addComponent(inputDangThuoc)
+                                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                                .addGap(46, 46, 46))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel7)
+                                                .addGap(84, 84, 84)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(inputMaThuoc)
+                                        .addComponent(inputTenThuoc)
+                                        .addComponent(inputGiaThuoc)
+                                        .addComponent(congDungName, 0, 189, Short.MAX_VALUE)
+                                        .addComponent(dangThuoc, 0, 189, Short.MAX_VALUE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1)
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(inputMaThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(inputTenThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(inputGiaThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inputDangThuoc)
-                    .addComponent(dangThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(congDungName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd)
-                    .addComponent(btnBack))
-                .addGap(32, 32, 32))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(jLabel1)
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(inputMaThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(22, 22, 22)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(inputTenThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel5)
+                                        .addComponent(inputGiaThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(inputDangThuoc)
+                                        .addComponent(dangThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel7)
+                                        .addComponent(congDungName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnAdd)
+                                        .addComponent(btnBack))
+                                .addGap(32, 32, 32))
         );
 
         pack();
@@ -190,51 +189,43 @@ public class JThemThuoc extends javax.swing.JFrame {
     }//GEN-LAST:event_inputTenThuocActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
-        String maMon = inputMaThuoc.getText();
-        String tenMon = inputTenThuoc.getText();
-        String hinhAnh = inputHinhAnh.getText();
-        Long idLoaiMon = Long.valueOf(this.congDungName.getSelectedItem().toString());
-        if (maMon.length() <= 15 && maMon.matches("\\w+")) {
-            if (tenMon.length() <= 50) {
-                Integer giaDat = null;
+        String maThuoc = inputMaThuoc.getText();
+        String tenThuoc = inputTenThuoc.getText();
+        if (maThuoc.length() <= 15 && maThuoc.matches("\\w+")) {
+            if (tenThuoc.length() <= 50) {
+                Double giaDat = null;
                 try {
-                    giaDat = Integer.parseInt(inputGiaThuoc.getText());
+                    giaDat = Double.parseDouble(inputGiaThuoc.getText());
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Giá món ăn phải là dạng số");
                     inputGiaThuoc.requestFocus();
                 }
-                Integer thoiGian = null;
+
+                String dangThuoc = Objects.requireNonNull(inputDangThuoc.getText()).toString();
+
+
+                Long congDung = null;
                 try {
-                    thoiGian = Integer.parseInt(inputThoiGian.getText());
+                    congDung = Long.parseLong(Objects.requireNonNull(congDungName.getSelectedItem()).toString());
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Thời gian phục vụ phải là dạng số");
-                    inputThoiGian.requestFocus();
+                    JOptionPane.showMessageDialog(this, "Công dụng không hợp lệ");
+                    inputDangThuoc.requestFocus();
                 }
-                MonAn monAn1 = new MonAn(maMon, tenMon, hinhAnh, giaDat, thoiGian, idLoaiMon);
-                SocketConnection crt = new SocketConnection();
-                Action status = Action.ADD;
-                ObjectAction sendObject = new ObjectAction();
-                sendObject.setType(ModelType.MON_AN);
-                sendObject.setAction(status);
-                sendObject.setObject(monAn1);
-                crt.openSocket();
-                crt.sendObject(sendObject);
-
-                String res = crt.getResult();
+                SocketConnection socketConnection = thuocService.updateThuoc(null, maThuoc, dangThuoc, giaDat, tenThuoc, congDung);
+                ServerResponse res = (ServerResponse) socketConnection.getResult();
 
                 try {
-                    if (res.equals("ok")) {
-                        JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                    if (ServerResponse.OK.equals(res)) {
+                        JOptionPane.showMessageDialog(this, "Sửa thành công!");
                     } else {
-                        JOptionPane.showMessageDialog(this, "thêm thất bại");
+                        JOptionPane.showMessageDialog(this, "Sửa thất bại");
                     }
                     setVisible(false);
                     new JThuoc().setVisible(true);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                crt.closeConnection();
+                socketConnection.closeConnection();
             } else {
                 JOptionPane.showMessageDialog(this, "Tên món ăn không đúng kích thước hoặc chứa ký tự đặc biệt");
                 inputTenThuoc.requestFocus();

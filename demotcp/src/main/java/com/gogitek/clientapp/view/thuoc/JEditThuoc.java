@@ -5,56 +5,57 @@
 package com.gogitek.clientapp.view.thuoc;
 
 import com.gogitek.clientapp.controller.SocketConnection;
+import com.gogitek.clientapp.model.Thuoc;
+import com.gogitek.clientapp.model.dto.Action;
+import com.gogitek.clientapp.model.dto.ModelSender;
+import com.gogitek.clientapp.model.dto.ObjectSender;
+import com.gogitek.clientapp.model.dto.ServerResponse;
+import com.gogitek.clientapp.service.ThuocService;
+import com.gogitek.clientapp.service.ThuocServiceImpl;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 
 /**
  * @author bmtnt
  */
 public class JEditThuoc extends javax.swing.JFrame {
 
-    private final MonAnDAO monAnDAO = new MonAnDAO();
-
-    public JEditThuoc() {
+    private ThuocService thuocService;
+    public JEditThuoc(){
     }
-
     /**
-     * Creates new form JSuaMonAn
+     * Creates new form JEditThuoc
      *
-     * @param monAn
+     * @param thuoc
      */
-    public JEditThuoc(MonAn monAn) {
+    public JEditThuoc(Thuoc thuoc) {
         initComponents();
-
-        init(monAn);
+        thuocService = new ThuocServiceImpl();
+        init(thuoc);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
-    public void init(MonAn monAn) {
-        inputID.setText(monAn.getId() + "");
-        inputMaThuoc.setText(monAn.getMa_mon());
-        inputTenThuoc.setText(monAn.getTen_mon());
-        inputHinhAnh.setText(monAn.getHinh_anh());
-        inputGia.setText(monAn.getGia() + "");
-        inputDangThuoc.setText(monAn.getThoi_gian() + "");
-        List<MonAn> list = new ArrayList<>();
+    public void init(Thuoc thuoc) {
+        inputID.setText(thuoc.getId() + "");
+        inputMaThuoc.setText(thuoc.getMaThuoc());
+        inputTenThuoc.setText(thuoc.getTenThuoc());
+        inputCongDung.setSelectedItem(thuoc.getCongDungId());
+        inputGia.setText(thuoc.getGiaThuoc() + "");
+        inputDangThuoc.setSelectedItem(thuoc.getDangThuoc());
+        List<Thuoc> list = new ArrayList<>();
         try {
-            list = monAnDAO.getAll();
+            list = (List<Thuoc>) thuocService.findListThuocByKey(null).getResult();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         for (int i = 0; i < list.size(); i++) {
             inputCongDung.addItem(list.get(i).getId() + "");
-            if (Objects.equals(list.get(i).getId(), monAn.getLoai_mon_id())) {
+            if (Objects.equals(list.get(i).getId(), thuoc.getCongDungId())) {
                 inputCongDung.setSelectedIndex(i);
             }
         }
@@ -239,8 +240,7 @@ public class JEditThuoc extends javax.swing.JFrame {
         int i = JOptionPane.showConfirmDialog(this, "Bạn chắc chắn muốn xóa id " + id + " không?", "DELETE MON AN", JOptionPane.YES_NO_OPTION);
         if (i == JOptionPane.YES_OPTION) {
             try {
-                MonAnDAO monAnDAO = new MonAnDAO();
-                monAnDAO.delete(id);
+                thuocService.deleteThuocById(id);
                 JOptionPane.showMessageDialog(this, "Xóa thành công!");
                 setVisible(false);
                 new JThuoc().setVisible(true);
@@ -256,51 +256,43 @@ public class JEditThuoc extends javax.swing.JFrame {
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
-        Long id = Long.valueOf(inputID.getText());
-        String maMon = inputMaThuoc.getText();
-        String tenMon = inputTenThuoc.getText();
-        String hinhAnh = inputHinhAnh.getText();
-        Long idLoaiMon = Long.valueOf(this.inputCongDung.getSelectedItem().toString());
-        if (maMon.length() <= 15 && maMon.matches("\\w+")) {
-            if (tenMon.length() <= 50) {
-                Integer giaDat = null;
+        String maThuoc = inputMaThuoc.getText();
+        String tenThuoc = inputTenThuoc.getText();
+        if (maThuoc.length() <= 15 && maThuoc.matches("\\w+")) {
+            if (tenThuoc.length() <= 50) {
+                Double giaDat = null;
                 try {
-                    giaDat = Integer.parseInt(inputGia.getText());
+                    giaDat = Double.parseDouble(inputGia.getText());
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(this, "Giá món ăn phải là dạng số");
                     inputGia.requestFocus();
                 }
-                Integer thoiGian = null;
+
+                String dangThuoc = Objects.requireNonNull(inputDangThuoc.getSelectedItem()).toString();
+
+
+                Long congDung = null;
                 try {
-                    thoiGian = Integer.parseInt(inputDangThuoc.getText());
+                    congDung = Long.parseLong(Objects.requireNonNull(inputCongDung.getSelectedItem()).toString());
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Thời gian phục vụ phải là dạng số");
+                    JOptionPane.showMessageDialog(this, "Công dụng không hợp lệ");
                     inputDangThuoc.requestFocus();
                 }
-                MonAn monAn1 = new MonAn(id, maMon, tenMon, hinhAnh, giaDat, thoiGian, idLoaiMon);
-                SocketConnection crt = new SocketConnection();
-                Action status = Action.ADD;
-                ObjectAction sendObject = new ObjectAction();
-                sendObject.setType(ModelType.MON_AN);
-                sendObject.setAction(status);
-                sendObject.setObject(monAn1);
-                crt.openSocket();
-                crt.sendObject(sendObject);
-
-                String res = crt.getResult();
+                SocketConnection socketConnection = thuocService.updateThuoc(null, maThuoc, dangThuoc, giaDat, tenThuoc, congDung);
+                ServerResponse res = (ServerResponse) socketConnection.getResult();
 
                 try {
-                    if (res.equals("ok")) {
-                        JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                    if (ServerResponse.OK.equals(res)) {
+                        JOptionPane.showMessageDialog(this, "Sửa thành công!");
                     } else {
-                        JOptionPane.showMessageDialog(this, "thêm thất bại");
+                        JOptionPane.showMessageDialog(this, "Sửa thất bại");
                     }
                     setVisible(false);
                     new JThuoc().setVisible(true);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                crt.closeConnection();
+                socketConnection.closeConnection();
             } else {
                 JOptionPane.showMessageDialog(this, "Tên món ăn không đúng kích thước hoặc chứa ký tự đặc biệt");
                 inputTenThuoc.requestFocus();
@@ -361,11 +353,7 @@ public class JEditThuoc extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new JEditThuoc().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new JEditThuoc().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

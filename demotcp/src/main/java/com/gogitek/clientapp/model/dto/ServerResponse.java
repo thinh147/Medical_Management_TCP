@@ -1,5 +1,7 @@
 package com.gogitek.clientapp.model.dto;
 
-public enum ServerResponse {
+import java.io.Serializable;
+
+public enum ServerResponse implements Serializable {
     OK, FAIL;
 }

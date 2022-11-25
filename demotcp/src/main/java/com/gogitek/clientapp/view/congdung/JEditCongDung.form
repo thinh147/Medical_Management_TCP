@@ -54,8 +54,8 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="inputTenLoai" min="-2" pref="189" max="-2" attributes="0"/>
-                                  <Component id="inputMaLoai" min="-2" pref="189" max="-2" attributes="0"/>
+                                  <Component id="inputTenCongDung" min="-2" pref="189" max="-2" attributes="0"/>
+                                  <Component id="inputMaCongDung" min="-2" pref="189" max="-2" attributes="0"/>
                                   <Component id="inputMota" alignment="0" min="-2" pref="189" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -84,12 +84,12 @@
               <EmptySpace pref="28" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" max="-2" attributes="0"/>
-                  <Component id="inputMaLoai" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inputMaCongDung" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="inputTenLoai" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inputTenCongDung" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -115,24 +115,24 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="M&#xe3; lo&#x1ea1;i:"/>
+        <Property name="text" type="java.lang.String" value="M&#xe3; c&#xf4;ng d&#x1ee5;ng"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="T&#xea;n lo&#x1ea1;i:"/>
+        <Property name="text" type="java.lang.String" value="T&#xea;n C&#xf4;ng D&#x1ee5;ng"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="M&#xf4; t&#x1ea3;:"/>
+        <Property name="text" type="java.lang.String" value="M&#xf4; t&#x1ea3;"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="inputMaLoai">
+    <Component class="javax.swing.JTextField" name="inputMaCongDung">
     </Component>
-    <Component class="javax.swing.JTextField" name="inputTenLoai">
+    <Component class="javax.swing.JTextField" name="inputTenCongDung">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputTenLoaiActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputTenCongDungActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="inputMota">

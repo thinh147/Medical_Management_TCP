@@ -1,5 +1,7 @@
 package com.gogitek.clientapp.model.dto;
 
-public enum Action {
+import java.io.Serializable;
+
+public enum Action implements Serializable {
     MODIFY, SELECT, DELETE;
 }

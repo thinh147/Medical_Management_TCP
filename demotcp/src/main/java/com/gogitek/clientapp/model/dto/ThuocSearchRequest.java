@@ -1,6 +1,8 @@
 package com.gogitek.clientapp.model.dto;
 
-public class ThuocSearchRequest {
+import java.io.Serializable;
+
+public class ThuocSearchRequest implements Serializable {
     private String keyword;
     private Long congDungId;
 

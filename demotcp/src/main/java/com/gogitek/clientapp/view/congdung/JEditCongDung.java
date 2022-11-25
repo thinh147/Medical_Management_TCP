@@ -38,8 +38,8 @@ public class JEditCongDung extends javax.swing.JFrame {
 
     public void init(CongDung congDung) {
         inputID.setText(congDung.getId() + "");
-        inputMaLoai.setText(congDung.getMaCongDung());
-        inputTenLoai.setText(congDung.getTen());
+        inputMaCongDung.setText(congDung.getMaCongDung());
+        inputTenCongDung.setText(congDung.getTen());
         inputMota.setText(congDung.getMota());
     }
 
@@ -56,8 +56,8 @@ public class JEditCongDung extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        inputMaLoai = new javax.swing.JTextField();
-        inputTenLoai = new javax.swing.JTextField();
+        inputMaCongDung = new javax.swing.JTextField();
+        inputTenCongDung = new javax.swing.JTextField();
         inputMota = new javax.swing.JTextField();
         btnUpdate = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
@@ -74,15 +74,15 @@ public class JEditCongDung extends javax.swing.JFrame {
 
         jLabel1.setText("SỬA THÔNG TIN LOẠI MÓN ĂN");
 
-        jLabel2.setText("Mã loại:");
+        jLabel2.setText("Mã công dụng");
 
-        jLabel3.setText("Tên loại:");
+        jLabel3.setText("Tên Công Dụng");
 
-        jLabel4.setText("Mô tả:");
+        jLabel4.setText("Mô tả");
 
-        inputTenLoai.addActionListener(new java.awt.event.ActionListener() {
+        inputTenCongDung.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputTenLoaiActionPerformed(evt);
+                inputTenCongDungActionPerformed(evt);
             }
         });
 
@@ -139,8 +139,8 @@ public class JEditCongDung extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(55, 55, 55)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(inputTenLoai, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(inputMaLoai, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inputTenCongDung, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(inputMaCongDung, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(inputMota, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(35, 35, 35))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -160,11 +160,11 @@ public class JEditCongDung extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(inputMaLoai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputMaCongDung, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(inputTenLoai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputTenCongDung, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -180,15 +180,15 @@ public class JEditCongDung extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inputTenLoaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputTenLoaiActionPerformed
+    private void inputTenCongDungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputTenCongDungActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_inputTenLoaiActionPerformed
+    }//GEN-LAST:event_inputTenCongDungActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         Long id = Long.valueOf(inputID.getText());
-        String maLoai = inputMaLoai.getText();
-        String tenLoai = inputTenLoai.getText();
+        String maLoai = inputMaCongDung.getText();
+        String tenLoai = inputTenCongDung.getText();
         String moTa = inputMota.getText();
         if (maLoai.length() <= 15 && maLoai.matches("\\w+")) {
             if (tenLoai.length() <= 50 && tenLoai.matches("\\w+")) {
@@ -203,11 +203,11 @@ public class JEditCongDung extends javax.swing.JFrame {
                 socketConnection.closeConnection();
             } else {
                 JOptionPane.showMessageDialog(this, "Tên loại công dụng không đúng kích thước hoặc chứa ký tự đặc biệt");
-                inputTenLoai.requestFocus();
+                inputTenCongDung.requestFocus();
             }
         } else {
             JOptionPane.showMessageDialog(this, "Mã loại công dụng không đúng kích thước hoặc chứa ký tự đặc biệt");
-            inputMaLoai.requestFocus();
+            inputMaCongDung.requestFocus();
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -217,10 +217,11 @@ public class JEditCongDung extends javax.swing.JFrame {
         int i = JOptionPane.showConfirmDialog(this, "Bạn chắc chắn muốn xóa id " + id + " không?", "DELETE công dụng", JOptionPane.YES_NO_OPTION);
         if (i == JOptionPane.YES_OPTION) {
             try {
-                congDungService.deleteCongDungById(id);
+                SocketConnection socketConnection = congDungService.deleteCongDungById(id);
                 JOptionPane.showMessageDialog(this, "Xóa thành công!");
                 setVisible(false);
                 new JCongDung().setVisible(true);
+                socketConnection.closeConnection();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -309,9 +310,9 @@ public class JEditCongDung extends javax.swing.JFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JTextField inputID;
-    private javax.swing.JTextField inputMaLoai;
+    private javax.swing.JTextField inputMaCongDung;
     private javax.swing.JTextField inputMota;
-    private javax.swing.JTextField inputTenLoai;
+    private javax.swing.JTextField inputTenCongDung;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

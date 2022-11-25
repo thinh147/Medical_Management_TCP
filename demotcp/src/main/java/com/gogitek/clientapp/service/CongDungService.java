@@ -9,5 +9,5 @@ import java.util.List;
 public interface CongDungService {
     SocketConnection updateCongDung(Long id, String maCongDung, String tenCongDung, String mota);
     SocketConnection deleteCongDungById(Long id);
-    List<CongDung> findListCongDungByKey(String key);
+    SocketConnection findListCongDungByKey(String key);
 }

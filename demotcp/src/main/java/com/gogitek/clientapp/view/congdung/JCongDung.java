@@ -4,9 +4,11 @@
  */
 package com.gogitek.clientapp.view.congdung;
 
+import com.gogitek.clientapp.controller.SocketConnection;
 import com.gogitek.clientapp.model.CongDung;
 import com.gogitek.clientapp.service.CongDungService;
 import com.gogitek.clientapp.service.CongDungServiceImpl;
+import com.gogitek.clientapp.view.Home;
 
 import java.util.ArrayList;
 
@@ -37,7 +39,9 @@ public class JCongDung extends javax.swing.JFrame {
     public void initData() {
         List<CongDung> list = new ArrayList<>();
         try {
-            list = congDungService.findListCongDungByKey(null);
+            SocketConnection socketConnection = congDungService.findListCongDungByKey(null);
+            list = (List<CongDung>) socketConnection.getResult();
+            socketConnection.closeConnection();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -187,13 +191,14 @@ public class JCongDung extends javax.swing.JFrame {
         inputName.setText("");
         DefaultTableModel model = (DefaultTableModel) tableCongDung.getModel();
         model.setRowCount(0);
-        List<CongDung> list1 = new ArrayList<>();
-        try {
-            list1 = congDungService.findListCongDungByKey(null);
+        List<CongDung> list = new ArrayList<>();
+        try {SocketConnection socketConnection = congDungService.findListCongDungByKey(null);
+            list = (List<CongDung>) socketConnection.getResult();
+            socketConnection.closeConnection();
         } catch (Exception ex) {
             ex.printStackTrace();
         }   
-        for (CongDung value : list1) {
+        for (CongDung value : list) {
             Object[] rowData = new Object[4];
             rowData[0] = value.getId();
             rowData[1] = value.getMaCongDung();
@@ -210,7 +215,8 @@ public class JCongDung extends javax.swing.JFrame {
         List<CongDung> listCongDung = new ArrayList<>();
         try {
             String name = inputName.getText();
-            listCongDung = congDungService.findListCongDungByKey(name);
+            SocketConnection socketConnection = congDungService.findListCongDungByKey(name);
+            listCongDung = (List<CongDung>) socketConnection.getResult();
         } catch (Exception ex) {
             ex.printStackTrace();
         }   

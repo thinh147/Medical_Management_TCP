@@ -37,13 +37,13 @@ public class CongDungServiceImpl implements CongDungService {
     }
 
     @Override
-    public List<CongDung> findListCongDungByKey(String key) {
+    public SocketConnection findListCongDungByKey(String key) {
         ObjectSender sendObject = new ObjectSender();
         sendObject.setAction(Action.SELECT);
         sendObject.setModelSender(ModelSender.CONG_DUNG);
         sendObject.setObject(key);
         socketConnection.openSocket();
         socketConnection.sendObject(sendObject);
-        return (List<CongDung>) socketConnection.getResult();
+        return socketConnection;
     }
 }

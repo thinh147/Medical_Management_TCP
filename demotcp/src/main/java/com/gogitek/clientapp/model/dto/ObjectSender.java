@@ -1,6 +1,8 @@
 package com.gogitek.clientapp.model.dto;
 
-public class ObjectSender {
+import java.io.Serializable;
+
+public class ObjectSender implements Serializable {
     private Object object;
     private Action action;
     private ModelSender modelSender;

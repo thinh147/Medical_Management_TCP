@@ -1,5 +1,7 @@
 package com.gogitek.clientapp.model.dto;
 
-public enum ModelSender {
+import java.io.Serializable;
+
+public enum ModelSender implements Serializable {
     THUOC, CONG_DUNG;
 }

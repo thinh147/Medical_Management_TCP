@@ -5,11 +5,13 @@
  */
 package com.gogitek.clientapp.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author bmtnt
  */
-public class Thuoc {
+public class Thuoc implements Serializable {
     private Long id;
     private String maThuoc;
     private String dangThuoc;
@@ -63,5 +65,22 @@ public class Thuoc {
 
     public void setDangThuoc(String dangThuoc) {
         this.dangThuoc = dangThuoc;
+    }
+
+    public Thuoc(Long id, String maThuoc, String dangThuoc, Double giaThuoc, String tenThuoc, Long congDungId) {
+        this.id = id;
+        this.maThuoc = maThuoc;
+        this.dangThuoc = dangThuoc;
+        this.giaThuoc = giaThuoc;
+        this.tenThuoc = tenThuoc;
+        this.congDungId = congDungId;
+    }
+
+    public Thuoc(String maThuoc, String dangThuoc, Double giaThuoc, String tenThuoc, Long congDungId) {
+        this.maThuoc = maThuoc;
+        this.dangThuoc = dangThuoc;
+        this.giaThuoc = giaThuoc;
+        this.tenThuoc = tenThuoc;
+        this.congDungId = congDungId;
     }
 }

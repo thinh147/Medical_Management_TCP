@@ -4,12 +4,10 @@
  */
 package com.gogitek.clientapp.view.thuoc;
 
-
-
-import com.gogitek.demotcp.dao.MonAnDAO;
-import com.gogitek.demotcp.model.MonAn;
-import com.gogitek.demotcp.view.Home;
-//import com.gogitek.clientapp.view.thuoc.JEditThuoc;
+import com.gogitek.clientapp.model.Thuoc;
+import com.gogitek.clientapp.service.ThuocService;
+import com.gogitek.clientapp.service.ThuocServiceImpl;
+import com.gogitek.clientapp.view.Home;
 
 import java.util.List;
 import java.util.Vector;
@@ -17,41 +15,40 @@ import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
  * @author bmtnt
  */
 public class JThuoc extends javax.swing.JFrame {
 
-    private MonAnDAO MonDAO = new MonAnDAO();
-    private List<MonAn> list;
+    private final ThuocService thuocService;
+    private List<Thuoc> list;
 
     /**
-     * Creates new form MonAn
+     * Creates new form Thuoc
      */
     public JThuoc() {
-        initComponents(); 
-        tableMonAn.setEnabled(false);
+        initComponents();
+        tableThuoc.setEnabled(false);
         initData();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        thuocService = new ThuocServiceImpl();
     }
 
     public void initData() {
         try {
-            list = MonDAO.getAll();
+            list = (List<Thuoc>) thuocService.findListThuocByKey(null).getResult();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
-        for (MonAn value : list) {
-            Object[] rowData = new Object[7];
+        DefaultTableModel model = (DefaultTableModel) tableThuoc.getModel();
+        for (Thuoc value : list) {
+            Object[] rowData = new Object[6];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_mon();
-            rowData[2] = value.getTen_mon();
-            rowData[3] = value.getHinh_anh();
-            rowData[4] = value.getGia();
-            rowData[5] = value.getThoi_gian();
-            rowData[6] = value.getLoai_mon_id();
+            rowData[1] = value.getMaThuoc();
+            rowData[2] = value.getTenThuoc();
+            rowData[3] = value.getDangThuoc();
+            rowData[4] = value.getGiaThuoc();
+            rowData[5] = value.getCongDungId();
             model.addRow(rowData);
         }
     }
@@ -66,13 +63,12 @@ public class JThuoc extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableMonAn = new javax.swing.JTable();
+        tableThuoc = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnThem = new javax.swing.JButton();
         inputName = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
-        typeSearch = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -81,31 +77,32 @@ public class JThuoc extends javax.swing.JFrame {
             }
         });
 
-        tableMonAn.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tableThuoc.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{
 
-            },
-            new String [] {
-                "ID", "Mã Thuốc", "Tên Thuốc", "Dạng Thuốc", "Giá Thuốc", "Công Dụng"
-            }
+                },
+                new String[]{
+                        "ID", "Mã Thuốc", "Tên Thuốc", "Dạng Thuốc", "Giá Thuốc", "Công Dụng"
+                }
         ));
-        tableMonAn.setEnabled(false);
-        tableMonAn.addContainerListener(new java.awt.event.ContainerAdapter() {
+        tableThuoc.setEnabled(false);
+        tableThuoc.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentAdded(java.awt.event.ContainerEvent evt) {
-                tableMonAnComponentAdded(evt);
+                tableThuocComponentAdded(evt);
             }
         });
-        tableMonAn.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableThuoc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMonAnMouseClicked(evt);
+                tableThuocMouseClicked(evt);
             }
+
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                tableMonAnMousePressed(evt);
+                tableThuocMousePressed(evt);
             }
         });
-        jScrollPane1.setViewportView(tableMonAn);
+        jScrollPane1.setViewportView(tableThuoc);
 
-        jLabel1.setText("QUẢN LÝ MÓN ĂN");
+        jLabel1.setText("QUẢN LÝ THUỐC");
 
         btnThem.setText("Thêm");
         btnThem.addActionListener(new java.awt.event.ActionListener() {
@@ -134,53 +131,44 @@ public class JThuoc extends javax.swing.JFrame {
             }
         });
 
-        typeSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                typeSearchActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnThem)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnRefresh)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSearch)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(282, 282, 282)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(btnThem)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btnRefresh)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnSearch)))
+                                .addContainerGap())
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(282, 282, 282)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnThem)
-                    .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch)
-                    .addComponent(btnRefresh)
-                    .addComponent(typeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnThem)
+                                        .addComponent(inputName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSearch)
+                                        .addComponent(btnRefresh))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
         );
 
         pack();
@@ -190,9 +178,9 @@ public class JThuoc extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_inputNameActionPerformed
 
-    private void tableMonAnComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tableMonAnComponentAdded
+    private void tableThuocComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tableThuocComponentAdded
         // TODO add your handling code here:        
-    }//GEN-LAST:event_tableMonAnComponentAdded
+    }//GEN-LAST:event_tableThuocComponentAdded
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
@@ -200,40 +188,38 @@ public class JThuoc extends javax.swing.JFrame {
         setVisible(false);
     }//GEN-LAST:event_btnThemActionPerformed
 
-    private void tableMonAnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMonAnMouseClicked
+    private void tableThuocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableThuocMouseClicked
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
-        Vector<Object> v = (Vector<Object>) model.getDataVector().elementAt(tableMonAn.convertRowIndexToModel(tableMonAn.rowAtPoint(evt.getPoint())));
-        MonAn mon1 = new MonAn((Long) v.get(0), (String) v.get(1), (String) v.get(2), (String) v.get(3),
-                (Integer) v.get(4), (Integer) v.get(5), (Long) v.get(6));
-        (new JEditThuoc(mon1)).setVisible(true);
+        DefaultTableModel model = (DefaultTableModel) tableThuoc.getModel();
+        Vector<Object> v = (Vector<Object>) model.getDataVector().elementAt(tableThuoc.convertRowIndexToModel(tableThuoc.rowAtPoint(evt.getPoint())));
+        Thuoc thuoc = new Thuoc((Long) v.get(0), (String) v.get(1), (String) v.get(4), (Double) v.get(5), (String) v.get(3), (Long) v.get(6));
+        (new JEditThuoc(thuoc)).setVisible(true);
         setVisible(false);
-    }//GEN-LAST:event_tableMonAnMouseClicked
+    }//GEN-LAST:event_tableThuocMouseClicked
 
-    private void tableMonAnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMonAnMousePressed
+    private void tableThuocMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableThuocMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableMonAnMousePressed
+    }//GEN-LAST:event_tableThuocMousePressed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // TODO add your handling code here:        
         inputName.setText("");
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableThuoc.getModel();
         model.setRowCount(0);
-        List<MonAn> list1 = null;
+        List<Thuoc> list1 = null;
         try {
-            list1 = MonDAO.getAll();
+            list1 = (List<Thuoc>) thuocService.findListThuocByKey(null).getResult();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        for (MonAn value : list1) {
-            Object[] rowData = new Object[7];
+        for (Thuoc value : list1) {
+            Object[] rowData = new Object[6];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_mon();
-            rowData[2] = value.getTen_mon();
-            rowData[3] = value.getHinh_anh();
-            rowData[4] = value.getGia();
-            rowData[5] = value.getThoi_gian();
-            rowData[6] = value.getLoai_mon_id();
+            rowData[1] = value.getMaThuoc();
+            rowData[2] = value.getTenThuoc();
+            rowData[3] = value.getDangThuoc();
+            rowData[4] = value.getGiaThuoc();
+            rowData[5] = value.getCongDungId();
             model.addRow(rowData);
         }
     }//GEN-LAST:event_btnRefreshActionPerformed
@@ -241,58 +227,22 @@ public class JThuoc extends javax.swing.JFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
 
         // TODO add your handling code here:            
-        DefaultTableModel model = (DefaultTableModel) tableMonAn.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableThuoc.getModel();
         model.setRowCount(0);
-        List<MonAn> list1 = null;
+        List<Thuoc> list1;
 
-        int index = typeSearch.getSelectedIndex();
-        switch (index) {
-            case 0:
-                try {
-                    int gia = Integer.parseInt(inputName.getText());
-                    list1 = MonDAO.searchMonAnByGia(gia);
-                } catch (Exception e) {
-                    try {
-                        list1 = MonDAO.getAll();
-                    } catch (Exception  ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-            case 1:
-                try {
-                    int tg = Integer.parseInt(inputName.getText());
-                    list1 = MonDAO.searchMonAnByThoiGian(tg);
-                } catch (Exception e) {
-                    try {
-                        list1 = MonDAO.getAll();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-            case 2:
-                try {
-                    Long id_loai_mon = Long.valueOf(inputName.getText());
-                    list1 = MonDAO.searchMonAnByLoaiMon(id_loai_mon);
-                } catch (Exception e) {
-                    try {
-                        list1 = MonDAO.getAll();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-        }
-        for (MonAn value : list1) {
-            Object[] rowData = new Object[7];
+
+        String key = inputName.getText();
+        list1 = (List<Thuoc>) thuocService.findListThuocByKey(key).getResult();
+
+        for (Thuoc value : list1) {
+            Object[] rowData = new Object[6];
             rowData[0] = value.getId();
-            rowData[1] = value.getMa_mon();
-            rowData[2] = value.getTen_mon();
-            rowData[3] = value.getHinh_anh();
-            rowData[4] = value.getGia();
-            rowData[5] = value.getThoi_gian();
-            rowData[6] = value.getLoai_mon_id();
+            rowData[1] = value.getMaThuoc();
+            rowData[2] = value.getTenThuoc();
+            rowData[3] = value.getDangThuoc();
+            rowData[4] = value.getGiaThuoc();
+            rowData[5] = value.getCongDungId();
             model.addRow(rowData);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
@@ -302,10 +252,6 @@ public class JThuoc extends javax.swing.JFrame {
         new Home().setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
-    private void typeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_typeSearchActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -313,7 +259,7 @@ public class JThuoc extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -323,13 +269,13 @@ public class JThuoc extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Thuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Thuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Thuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MonAn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Thuoc.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -348,7 +294,6 @@ public class JThuoc extends javax.swing.JFrame {
     private javax.swing.JTextField inputName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableMonAn;
-    private javax.swing.JComboBox<String> typeSearch;
+    private javax.swing.JTable tableThuoc;
     // End of variables declaration//GEN-END:variables
 }
