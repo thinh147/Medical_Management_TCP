@@ -6,18 +6,22 @@
 package service;
 
 import com.gogitek.server.repository.CongDungDao;
+import com.gogitek.server.repository.JsonUtils;
 import com.gogitek.server.repository.ThuocDao;
 import com.gogitek.server.repository.entity.CongDung;
 import com.gogitek.server.repository.entity.Thuoc;
 import com.gogitek.server.repository.entity.dto.ObjectReceiver;
 import com.gogitek.server.repository.entity.dto.ServerResponse;
 import com.gogitek.server.repository.entity.dto.ThuocSearchRequest;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -30,7 +34,7 @@ public class SocketConnection {
     private final ThuocDao thuocDao;
     private ServerSocket socket;
     private final List<Socket> list;
-
+    private static final Gson gson = new Gson();
     public static void start() {
         new SocketConnection();
     }
@@ -58,7 +62,7 @@ public class SocketConnection {
     public void sendObject(Object res) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(list.get(list.size() - 1).getOutputStream());
-            oos.writeObject(res);
+            oos.writeObject(gson.toJson(res));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,10 +84,14 @@ public class SocketConnection {
         }
     }
 
+    public static <T> T stringToArray(Object s, Class<T> clazz) {
+        return new Gson().fromJson(s.toString(), clazz);
+    }
+
     private void congDungHandler(ObjectReceiver object) {
         switch (object.getAction()) {
             case MODIFY:
-                if (congDungDao.save((CongDung) object.getObject())) {
+                if (congDungDao.save(stringToArray(object.getObject(), CongDung.class))) {
                     sendObject(ServerResponse.OK);
                     message("");
                 } else {
@@ -96,7 +104,7 @@ public class SocketConnection {
                 message("get list cong dung " + congDungList.toString());
                 break;
             case DELETE:
-                if(congDungDao.delete((Long) object.getObject())){
+            if(congDungDao.delete(Long.parseLong(object.getObject().toString()))){
                     sendObject(ServerResponse.OK);
                     message("Xóa Thành công");
                 }else {
@@ -109,26 +117,25 @@ public class SocketConnection {
     private void thuocHandler(ObjectReceiver object) {
         switch (object.getAction()) {
             case MODIFY:
-                if (thuocDao.save((Thuoc) object.getObject())) {
-                    sendObject(ServerResponse.OK);
+                if (thuocDao.save(stringToArray(object.getObject(), Thuoc.class))) {
+                    sendObject(gson.toJson(ServerResponse.OK));
                     message("");
                 } else {
-                    sendObject(ServerResponse.FAIL);
+                    sendObject(gson.toJson(ServerResponse.FAIL));
                 }
                 break;
             case DELETE:
-                if (thuocDao.delete((Long) object.getObject())) {
-                    sendObject(ServerResponse.OK);
+                if (thuocDao.delete(Long.parseLong(object.getObject().toString()))) {
+                    sendObject(gson.toJson(ServerResponse.OK));
                     message("sua thanh cong");
                 }else {
-                    sendObject(ServerResponse.FAIL);
+                    sendObject(gson.toJson(ServerResponse.FAIL));
                 }
                 break;
             case SELECT:
-                ThuocSearchRequest req = (ThuocSearchRequest) object.getObject();
-                List<Thuoc> congDungList = thuocDao.getAllByKeyword(req.getKeyword(), req.getCongDungId());
-                sendObject(congDungList);
-                message("get list cong dung " + congDungList.toString());
+                List<Thuoc> thuocList = thuocDao.getAllByKeyword((String) object.getObject());
+                sendObject(thuocList);
+                message("get list thuoc " + thuocList.toString());
                 break;
         }
     }
@@ -154,7 +161,7 @@ public class SocketConnection {
 
         try {
             ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-            object = (ObjectReceiver) ois.readObject();
+            object = gson.fromJson(ois.readObject().toString(), ObjectReceiver.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

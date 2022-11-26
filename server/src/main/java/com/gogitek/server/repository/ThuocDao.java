@@ -10,28 +10,32 @@ import com.gogitek.server.repository.entity.Thuoc;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- *
  * @author bmtnt
  */
-public class ThuocDao extends DaoConnection{
-    public List<Thuoc> getAllByKeyword(String keyword, Long congDungId) {
+public class ThuocDao extends DaoConnection {
+    public List<Thuoc> getAllByKeyword(String keyword) {
+        if (Objects.equals(keyword, "")) {
+            keyword = null;
+        }
         StringBuffer builder = new StringBuffer("SELECT * FROM thuoc ");
         builder.append("WHERE 1 = 1 and (");
+        if (keyword != null) {
+            builder.append("'");
+        }
         builder.append(keyword);
+        if (keyword != null) {
+            builder.append("'");
+        }
         builder.append(" IS NULL OR ma_thuoc like '%");
         builder.append(keyword);
         builder.append("%' OR ten like '%");
         builder.append(keyword);
-        builder.append("%' OR mota like '%");
+        builder.append("%' OR ma_thuoc like '%");
         builder.append(keyword);
         builder.append("%')");
-        builder.append("AND (");
-        builder.append(congDungId);
-        builder.append(" IS NULL OR cong_dung_id = ");
-        builder.append(congDungId);
-        builder.append(")");
         String sql = builder.toString();
         List<Thuoc> list = new ArrayList<>();
         Connection connection = null;
@@ -53,7 +57,7 @@ public class ThuocDao extends DaoConnection{
             }
             return list;
         } catch (Exception e) {
-            return null;
+            return new ArrayList<>();
         } finally {
             try {
                 if (connection != null) {
@@ -66,7 +70,7 @@ public class ThuocDao extends DaoConnection{
                     rs.close();
                 }
             } catch (SQLException e) {
-                return null;
+                return new ArrayList<>();
             }
         }
     }
@@ -81,13 +85,13 @@ public class ThuocDao extends DaoConnection{
             connection.setAutoCommit(false);
             ps = connection.prepareStatement(sqlInserts, Statement.RETURN_GENERATED_KEYS);
             if (thuoc.getId() != null) {
-                ps.setLong(1, 0);
+                ps.setLong(1, thuoc.getId());
             } else {
                 ps.setNull(1, Types.NULL);
             }
             ps.setString(2, thuoc.getMaThuoc());
             ps.setString(3, thuoc.getTenThuoc());
-            ps.setString(4, thuoc.getDangThuoc());
+            ps.setString(4, thuoc.getDangThuoc()+"");
             ps.setDouble(5, thuoc.getGiaThuoc());
             ps.setLong(6, thuoc.getCongDungId());
             ps.executeUpdate();
@@ -120,7 +124,7 @@ public class ThuocDao extends DaoConnection{
     }
 
     public boolean delete(Long id) {
-        String sql = "delete from thuoc where id = ?";
+        String sql = "delete from thuoc where thuoc_id = ?";
         Connection connection = null;
         PreparedStatement ps = null;
         try {

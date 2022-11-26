@@ -22,9 +22,18 @@ import java.util.List;
 public class CongDungDao extends DaoConnection {
 
     public List<CongDung> getAllByKeyword(String keyword) {
+        if(keyword.equals("")){
+            keyword = null;
+        }
         StringBuffer builder = new StringBuffer("SELECT * FROM cong_dung ");
         builder.append("WHERE 1 = 1 and (");
+        if(keyword != null){
+            builder.append("'");
+        }
         builder.append(keyword);
+        if(keyword != null){
+            builder.append("'");
+        }
         builder.append(" IS NULL OR ma_cong_dung like '%");
         builder.append(keyword);
         builder.append("%' OR ten like '%");
@@ -44,7 +53,7 @@ public class CongDungDao extends DaoConnection {
             rs = ps.executeQuery();
             while (rs.next()) {
                 CongDung congDung = new CongDung();
-                congDung.setId(rs.getLong("id"));
+                congDung.setId(rs.getLong("cong_dung_id"));
                 congDung.setMaCongDung(rs.getString("ma_cong_dung"));
                 congDung.setTen(rs.getString("ten"));
                 congDung.setMota(rs.getString("mota"));
@@ -52,7 +61,7 @@ public class CongDungDao extends DaoConnection {
             }
             return list;
         } catch (Exception e) {
-            return null;
+            return new ArrayList<>();
         } finally {
             try {
                 if (connection != null) {
@@ -65,13 +74,13 @@ public class CongDungDao extends DaoConnection {
                     rs.close();
                 }
             } catch (SQLException e) {
-                return null;
+                return new ArrayList<>();
             }
         }
     }
 
     public boolean save(CongDung congDung) {
-        String sqlInserts = "INSERT INTO cong_dung(id, ma_cong_dung, ten, mota) VALUES(?, ?, ?, ?)";
+        String sqlInserts = "INSERT INTO cong_dung(cong_dung_id, ma_cong_dung, ten, mota) VALUES(?, ?, ?, ?)";
         sqlInserts += " ON DUPLICATE KEY UPDATE ma_cong_dung = VALUES(ma_cong_dung), ten = VALUES(ten), mota = VALUES(mota)";
         Connection connection = null;
         PreparedStatement ps = null;
@@ -81,7 +90,7 @@ public class CongDungDao extends DaoConnection {
             connection.setAutoCommit(false);
             ps = connection.prepareStatement(sqlInserts, Statement.RETURN_GENERATED_KEYS);
             if (congDung.getId() != null) {
-                ps.setLong(1, 0);
+                ps.setLong(1, congDung.getId());
             } else {
                 ps.setNull(1, Types.NULL);
             }
@@ -119,7 +128,7 @@ public class CongDungDao extends DaoConnection {
     }
 
     public boolean delete(Long id) {
-        String sql = "delete from cong_dung where id = ?";
+        String sql = "delete from cong_dung where cong_dung_id = ?";
         Connection connection = null;
         PreparedStatement ps = null;
         try {
