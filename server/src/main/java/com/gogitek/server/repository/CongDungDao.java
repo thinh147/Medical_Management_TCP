@@ -129,14 +129,12 @@ public class CongDungDao extends DaoConnection {
 
     public boolean delete(Long id) {
         String sql = "delete from cong_dung where cong_dung_id = ?";
-        String sql1 = "delete from thuoc where cong_dung_id = ?";
         Connection connection = null;
         PreparedStatement ps = null;
         try {
             connection = getConnection();
             connection.setAutoCommit(false);
             ps = connection.prepareStatement(sql);
-            ps = connection.prepareStatement(sql1);
             ps.setLong(1, id);
             ps.executeUpdate();
             connection.commit();

@@ -106,6 +106,7 @@ public class SocketConnection {
                 break;
             case DELETE:
             if(congDungDao.delete(Long.parseLong(object.getObject().toString()))){
+                    thuocDao.deleteByCongDungId(Long.parseLong(object.getObject().toString()));
                     sendObject(ServerResponse.OK);
                     message("Xóa Thành công");
                 }else {

@@ -157,4 +157,39 @@ public class ThuocDao extends DaoConnection {
         }
         return false;
     }
+
+    public boolean deleteByCongDungId(Long id) {
+        String sql = "delete from thuoc where cong_dung_id = ?";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.executeUpdate();
+            connection.commit();
+            return true;
+        } catch (Exception e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
+        }
+        return false;
+    }
 }
