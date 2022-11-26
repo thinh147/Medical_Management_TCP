@@ -8,5 +8,5 @@ import java.util.List;
 public interface ThuocService {
     void deleteThuoc(Long id);
     void updateThuoc(Thuoc thuoc);
-    List<Thuoc> getListCongDungByKey(String key);
+    List<Thuoc> getListThuoc(String key);
 }

@@ -12,6 +12,9 @@ public class CongDung {
     private String mota;
     private String ten;
 
+    public Long getLongId(){
+        return Long.parseLong(this.id);
+    }
     public CongDung(String id, String maCongDung, String mota, String ten) {
         this.id = id;
         this.maCongDung = maCongDung;
