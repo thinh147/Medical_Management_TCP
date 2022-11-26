@@ -62,6 +62,7 @@ public class SocketConnection {
     public void sendObject(Object res) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(list.get(list.size() - 1).getOutputStream());
+            System.out.println(gson.toJson(res));
             oos.writeObject(gson.toJson(res));
         } catch (Exception e) {
             e.printStackTrace();

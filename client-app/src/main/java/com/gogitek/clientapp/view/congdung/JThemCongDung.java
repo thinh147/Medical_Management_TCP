@@ -4,6 +4,7 @@
  */
 package com.gogitek.clientapp.view.congdung;
 
+import com.gogitek.clientapp.JsonUtils;
 import com.gogitek.clientapp.controller.SocketConnection;
 import com.gogitek.clientapp.model.dto.ServerResponse;
 import com.gogitek.clientapp.service.CongDungService;
@@ -151,7 +152,7 @@ public class JThemCongDung extends javax.swing.JFrame {
                 Object res = socketConnection.getResult();
 
                 try {
-                    if (ServerResponse.OK.equals(res)) {
+                    if((ServerResponse.OK.toString().equals(JsonUtils.stringToObject(res.toString(), String.class)))){
                         JOptionPane.showMessageDialog(this, "Thêm thành công!");
                     } else {
                         JOptionPane.showMessageDialog(this, "thêm thất bại");
@@ -163,12 +164,12 @@ public class JThemCongDung extends javax.swing.JFrame {
                 }
                 socketConnection.closeConnection();
             } else {
-                JOptionPane.showMessageDialog(this, "Tên loại món ăn không đúng kích thước hoặc chứa ký tự đặc biệt");
+                JOptionPane.showMessageDialog(this, "Tên công dụng không đúng kích thước hoặc chứa ký tự đặc biệt");
                 inputTenLoai.requestFocus();
             }
 
         } else {
-            JOptionPane.showMessageDialog(this, "Mã loại món ăn không đúng kích thước hoặc chứa ký tự đặc biệt");
+            JOptionPane.showMessageDialog(this, "Mã công dụng không đúng kích thước hoặc chứa ký tự đặc biệt");
             inputMaLoai.requestFocus();
         }
 

@@ -6,7 +6,6 @@ package com.gogitek.clientapp.view.thuoc;
 
 import com.gogitek.clientapp.JsonUtils;
 import com.gogitek.clientapp.controller.SocketConnection;
-import com.gogitek.clientapp.model.CongDung;
 import com.gogitek.clientapp.model.Thuoc;
 import com.gogitek.clientapp.service.ThuocService;
 import com.gogitek.clientapp.service.ThuocServiceImpl;
@@ -105,7 +104,7 @@ public class JThuoc extends javax.swing.JFrame {
             }
 
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                tableThuocMousePressed(evt);
+                tableThuocMousePressed();
             }
         });
         jScrollPane1.setViewportView(tableThuoc);
@@ -178,7 +177,7 @@ public class JThuoc extends javax.swing.JFrame {
         // TODO add your handling code here:
         new JThemThuoc().setVisible(true);
         setVisible(false);
-    }//GEN-LAST:event_btnThemActionPerformed
+    }
 
     private void tableThuocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableThuocMouseClicked
         // TODO add your handling code here:
@@ -190,14 +189,12 @@ public class JThuoc extends javax.swing.JFrame {
         Thuoc thuoc = new Thuoc((String)v.get(0), (String) v.get(1), v.get(3) + "", (Double) v.get(4), (String) v.get(2), (Long) v.get(5));
         (new JEditThuoc(thuoc)).setVisible(true);
         setVisible(false);
-    }//GEN-LAST:event_tableThuocMouseClicked
+    }
 
-    private void tableThuocMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableThuocMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tableThuocMousePressed
+    private void tableThuocMousePressed() {
+    }
 
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // TODO add your handling code here:        
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {
         inputName.setText("");
         DefaultTableModel model = (DefaultTableModel) tableThuoc.getModel();
         model.setRowCount(0);
